@@ -1,0 +1,57 @@
+{
+ "id": "fxlocks",
+ "version": "0.2",
+ "title": "FX Locks: lock delay and reverb from the track",
+ "category": "Sequencer",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "Parameter locks on the shared delay and reverb, from the audio track itself: hold a trig and turn delay TIME (it steps through note values: 1/16, 1/8., 1/4 ...), WID or FDBK or reverb DEC on their pages, as for any lock. The step sets the delay/reverb when it plays and keeps it until the track's next trig, then the pattern's own value comes back. Two tracks locking the same knob at once: the higher track wins. The locks use sound slots 48-51, which no audio machine uses (not with machine-pages' extra-value machines). Needs seq-events.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "fxlocks.c",
+  "fxlocks.s"
+ ],
+ "sites": [
+  {
+   "addr": "0x40031586",
+   "stock": "4feffff02f0a2f02",
+   "op": "jmp",
+   "target": "fxl_enc_s"
+  },
+  {
+   "addr": "0x4003171c",
+   "stock": "4fefffd848d70c04",
+   "op": "jmp",
+   "target": "fxl_shown_s"
+  },
+  {
+   "addr": "0x40077fc2",
+   "stock": "487980001a18",
+   "op": "jsr",
+   "target": "fxl_render_s"
+  }
+ ],
+ "resources": {
+  "core": "4.1",
+  "names": [
+   "slots:48-51"
+  ]
+ },
+ "requires": [
+  "core",
+  "seq-events"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_tick",
+   "fn": "fxl_tick",
+   "order": 99
+  },
+  {
+   "event": "ev_fire_locks",
+   "fn": "fxl_locks",
+   "order": 90
+  }
+ ]
+}
